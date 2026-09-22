@@ -1,0 +1,6 @@
+{
+  "name": "Flores Amarillas - Feliz 21 de Septiembre",
+  "description": "Celebra el 21 de Septiembre con una experiencia interactiva de flores amarillas, lluvia de pétalos dorados, jardín floreciente en el atardecer y dedicatorias de amor.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
