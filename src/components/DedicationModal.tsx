@@ -11,11 +11,11 @@ interface DedicationModalProps {
 }
 
 const PRESET_MESSAGES = [
-  'El 21 de septiembre florece todo lo que siento por ti. ¡Feliz día de las flores amarillas!',
-  'Y ella sabía que él sabía, que vendría a buscarla con sus flores amarillas. Te quiero con toda mi alma.',
-  'Un ramo de flores amarillas para la persona que ilumina cada uno de mis días.',
+  'El 21 de septiembre florece todo lo bonito que la vida tiene para ti. ¡Feliz día de las flores amarillas!',
+  'Y ella sabía que él sabía, que vendría a buscarla con sus flores amarillas. ¡Que tengas un día radiante!',
+  'Un ramo de flores amarillas para iluminar cada uno de tus días de primavera.',
   'Que en esta primavera tu vida se llene de luz dorada, sueños cumplidos y momentos felices.',
-  'Nunca olvides lo especial e increíble que eres para mí.',
+  'Nunca olvides lo especial e increíble que eres.',
 ];
 
 export const DedicationModal: React.FC<DedicationModalProps> = ({
@@ -23,8 +23,8 @@ export const DedicationModal: React.FC<DedicationModalProps> = ({
   onClose,
   initialDedication,
 }) => {
-  const [recipient, setRecipient] = useState(initialDedication?.recipient || 'Mi amor');
-  const [sender, setSender] = useState(initialDedication?.sender || 'Tu admirador');
+  const [recipient, setRecipient] = useState(initialDedication?.recipient || 'Para ti');
+  const [sender, setSender] = useState(initialDedication?.sender || 'Con cariño');
   const [message, setMessage] = useState(
     initialDedication?.message ||
       'Y ella sabía que él sabía, que vendría a buscarla con sus flores amarillas. ¡Feliz 21 de septiembre!'
@@ -197,7 +197,7 @@ export const DedicationModal: React.FC<DedicationModalProps> = ({
                 <div className="flex items-center justify-between pt-2 border-t border-amber-300/60 text-[11px] text-amber-800">
                   <span>🌻 Flor virtual entregada</span>
                   <span className="font-script text-base text-amber-900 font-bold">
-                    Con amor infinito
+                    Con mucho cariño ✨
                   </span>
                 </div>
               </div>
