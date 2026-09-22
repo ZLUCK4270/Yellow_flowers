@@ -346,17 +346,43 @@ export const FlowerRainCanvas: React.FC<FlowerRainCanvasProps> = ({
     };
   }, [intensity, windForce, interactiveWind]);
 
-  // Mouse & Touch interaction tracking
+  // Mouse & Touch interaction tracking with ethereal golden pollen trail
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const prevX = mouseRef.current.x;
     const prevY = mouseRef.current.y;
+    const vx = e.clientX - prevX;
+    const vy = e.clientY - prevY;
+    const speed = Math.hypot(vx, vy);
+
     mouseRef.current = {
       x: e.clientX,
       y: e.clientY,
-      vx: e.clientX - prevX,
-      vy: e.clientY - prevY,
+      vx,
+      vy,
       active: true,
     };
+
+    // Ethereal pollen trail when cursor glides
+    if (speed > 4 && particlesRef.current.length < 160 && Math.random() < 0.65) {
+      particlesRef.current.push({
+        x: e.clientX + (Math.random() - 0.5) * 16,
+        y: e.clientY + (Math.random() - 0.5) * 16,
+        vx: (Math.random() - 0.5) * 1.2,
+        vy: -0.8 - Math.random() * 1.4, // float upwards gently like fairy dust
+        size: 3 + Math.random() * 4,
+        type: 'sparkle',
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: 0.05,
+        pitch: 0,
+        pitchSpeed: 0,
+        swayPhase: Math.random() * Math.PI * 2,
+        swaySpeed: 0.04,
+        swayAmplitude: 1.5,
+        opacity: 0.95,
+        colorVariation: '#FEF08A',
+        depth: 1.1,
+      });
+    }
   };
 
   const handleMouseLeave = () => {
