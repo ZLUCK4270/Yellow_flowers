@@ -123,10 +123,12 @@ export const CenterpieceSunflower: React.FC = () => {
 
             {/* Protective sepals */}
             <g
-              className="transition-all duration-1000 ease-out origin-center"
+              className="transition-all duration-1000 ease-out"
               style={{
-                transform: isBloomed ? 'scale(0.85) rotate(20deg)' : 'scale(1.1) rotate(0deg)',
-                opacity: isBloomed ? 0.35 : 0.85,
+                transformOrigin: '0px 0px',
+                transformBox: 'view-box',
+                transform: isBloomed ? 'scale(0.9) rotate(15deg)' : 'scale(1.05) rotate(0deg)',
+                opacity: isBloomed ? 0.4 : 0.85,
               }}
             >
               {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, idx) => (
@@ -139,57 +141,62 @@ export const CenterpieceSunflower: React.FC = () => {
               ))}
             </g>
 
-            {/* OUTER LAYER: Primary Sunflower Petals (Slow fluid blooming unfurl) */}
-            <g className="origin-center">
+            {/* OUTER LAYER: Primary Sunflower Petals (Radial 360° Anchored Bloom) */}
+            <g>
               {Array.from({ length: petalCount }).map((_, idx) => {
                 const angle = (idx * 360) / petalCount;
-                // Resting: curled inwards, narrow. Bloomed: wide, elegant, radiant.
                 const scaleY = isBloomed ? 1.05 : 0.45;
-                const scaleX = isBloomed ? 1.0 : 0.65;
+                const scaleX = isBloomed ? 1.0 : 0.62;
 
                 return (
-                  <path
-                    key={`cp-outer-${idx}`}
-                    d="M 0,0 C -18,-35 -20,-75 0,-102 C 20,-75 18,-35 0,0 Z"
-                    fill="url(#centerpiecePetalGrad)"
-                    className="transition-all duration-1000 ease-out origin-center"
-                    style={{
-                      transform: `rotate(${angle}deg) scale(${scaleX}, ${scaleY})`,
-                      transitionDelay: `${idx * 16}ms`,
-                      filter: isBloomed ? 'drop-shadow(0 0 6px rgba(245, 158, 11, 0.45))' : 'none',
-                    }}
-                  />
+                  <g key={`cp-outer-${idx}`} transform={`rotate(${angle})`}>
+                    <path
+                      d="M 0,0 C -18,-35 -20,-75 0,-102 C 20,-75 18,-35 0,0 Z"
+                      fill="url(#centerpiecePetalGrad)"
+                      style={{
+                        transformBox: 'fill-box',
+                        transformOrigin: '50% 100%',
+                        transform: `scale(${scaleX}, ${scaleY})`,
+                        transition: `transform 900ms cubic-bezier(0.16, 1, 0.3, 1) ${idx * 16}ms, filter 500ms ease`,
+                        filter: isBloomed ? 'drop-shadow(0 0 6px rgba(245, 158, 11, 0.45))' : 'none',
+                      }}
+                    />
+                  </g>
                 );
               })}
             </g>
 
             {/* INNER LAYER: Staggered Secondary Petals */}
-            <g className="origin-center">
+            <g>
               {Array.from({ length: petalCount }).map((_, idx) => {
                 const angle = (idx * 360) / petalCount + 9;
-                const scaleY = isBloomed ? 0.85 : 0.38;
+                const scaleY = isBloomed ? 0.88 : 0.38;
                 const scaleX = isBloomed ? 0.9 : 0.55;
 
                 return (
-                  <path
-                    key={`cp-inner-${idx}`}
-                    d="M 0,0 C -14,-25 -16,-58 0,-78 C 16,-58 14,-25 0,0 Z"
-                    fill="url(#centerpieceMidPetal)"
-                    className="transition-all duration-1000 ease-out origin-center"
-                    style={{
-                      transform: `rotate(${angle}deg) scale(${scaleX}, ${scaleY})`,
-                      transitionDelay: `${150 + idx * 16}ms`,
-                    }}
-                  />
+                  <g key={`cp-inner-${idx}`} transform={`rotate(${angle})`}>
+                    <path
+                      d="M 0,0 C -14,-25 -16,-58 0,-78 C 16,-58 14,-25 0,0 Z"
+                      fill="url(#centerpieceMidPetal)"
+                      style={{
+                        transformBox: 'fill-box',
+                        transformOrigin: '50% 100%',
+                        transform: `scale(${scaleX}, ${scaleY})`,
+                        transition: `transform 900ms cubic-bezier(0.16, 1, 0.3, 1) ${120 + idx * 16}ms`,
+                      }}
+                    />
+                  </g>
                 );
               })}
             </g>
 
             {/* Seed Center & Golden Disk Floret */}
             <g
-              className="transition-all duration-800 ease-out origin-center"
+              className="transition-all duration-800 ease-out"
               style={{
-                transform: isBloomed ? 'scale(1.12)' : 'scale(0.95)',
+                transformOrigin: '0px 0px',
+                transformBox: 'view-box',
+                transform: isBloomed ? 'scale(1.08)' : 'scale(0.96)',
               }}
             >
               {/* Textured Core */}

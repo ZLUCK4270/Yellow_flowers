@@ -37,44 +37,50 @@ export const InteractiveFlower: React.FC<InteractiveFlowerProps> = ({
     flowerAudio.playBloomChime(1.2);
   };
 
-  // SVG rendering variables for botanical layers
-  const outerPetalCount = flower.type === 'sunflower' ? 16 : flower.type === 'rose' ? 12 : 10;
-  const innerPetalCount = flower.type === 'sunflower' ? 12 : 8;
+  // Botanical parameters
+  const isSunflower = flower.type === 'sunflower';
+  const isDaisy = flower.type === 'daisy';
+  const isRose = flower.type === 'rose';
+  const isTulip = flower.type === 'tulip';
+
+  const sunflowerOuterCount = 16;
+  const sunflowerInnerCount = 12;
+  const daisyPetalCount = 18;
 
   return (
     <div
-      className="group relative flex flex-col items-center cursor-pointer select-none py-4 px-3"
+      className="group relative flex flex-col items-center cursor-pointer select-none py-3 px-2 w-full max-w-[190px]"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
       aria-label={`Flor interactiva: ${flower.name}`}
     >
-      {/* Delicate floating pollen sparkles when bloomed */}
+      {/* Floating pollen particles when bloomed */}
       {isBloomed && (
-        <div className="absolute -top-4 inset-x-0 flex justify-center pointer-events-none z-30">
+        <div className="absolute top-2 inset-x-0 flex justify-center pointer-events-none z-30">
           <div className="relative w-36 h-28">
-            <span className="absolute left-6 top-2 w-1.5 h-1.5 rounded-full bg-amber-200 animate-ping opacity-75" />
+            <span className="absolute left-6 top-3 w-1.5 h-1.5 rounded-full bg-amber-200 animate-ping opacity-75" />
             <span
-              className="absolute right-8 top-4 w-2 h-2 rounded-full bg-yellow-300 animate-pulse glow-gold"
+              className="absolute right-7 top-4 w-2 h-2 rounded-full bg-yellow-300 animate-pulse glow-gold"
               style={{ animationDelay: '0.2s' }}
             />
             <span
-              className="absolute left-1/2 -top-2 w-1.5 h-1.5 rounded-full bg-amber-100 animate-bounce"
+              className="absolute left-1/2 -top-1 w-1.5 h-1.5 rounded-full bg-amber-100 animate-bounce"
               style={{ animationDelay: '0.4s' }}
             />
             <span
-              className="absolute right-4 top-12 w-1 h-1 rounded-full bg-yellow-200 animate-ping"
+              className="absolute right-4 top-10 w-1 h-1 rounded-full bg-yellow-200 animate-ping"
               style={{ animationDelay: '0.6s' }}
             />
           </div>
         </div>
       )}
 
-      {/* Flower Crown Container */}
-      <div className="relative w-36 h-36 flex items-center justify-center">
-        {/* Ambient golden halo on bloom */}
+      {/* Main Unified Botanical Plant SVG */}
+      <div className="relative w-40 sm:w-44 h-56 sm:h-60 flex items-center justify-center">
+        {/* Soft Golden Bloom Halo */}
         <div
-          className={`absolute inset-0 rounded-full transition-all duration-1000 ease-out pointer-events-none ${
+          className={`absolute top-4 w-32 h-32 rounded-full transition-all duration-1000 ease-out pointer-events-none ${
             isBloomed
               ? 'bg-amber-400/25 blur-xl scale-125 opacity-100'
               : 'bg-amber-500/0 blur-md scale-90 opacity-0'
@@ -82,159 +88,411 @@ export const InteractiveFlower: React.FC<InteractiveFlowerProps> = ({
         />
 
         <svg
-          viewBox="-80 -80 160 160"
+          viewBox="-80 -75 160 215"
           className="w-full h-full overflow-visible transition-transform duration-700 ease-out group-hover:scale-105"
         >
           <defs>
-            {/* Golden petal gradient */}
+            {/* Primary Golden Petal Gradient */}
             <linearGradient id={`petalGrad-${flower.id}`} x1="0%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor={flower.id.includes('medianoche') ? '#78350F' : '#D97706'} />
+              <stop offset="35%" stopColor="#F59E0B" />
+              <stop offset="80%" stopColor="#FDE047" />
+              <stop offset="100%" stopColor="#FEF08A" />
+            </linearGradient>
+
+            {/* Daisy Petal Gradient */}
+            <linearGradient id={`daisyGrad-${flower.id}`} x1="0%" y1="100%" x2="0%" y2="0%">
               <stop offset="0%" stopColor="#D97706" />
-              <stop offset="45%" stopColor="#F59E0B" />
-              <stop offset="85%" stopColor="#FDE047" />
-              <stop offset="100%" stopColor="#FEF08A" />
+              <stop offset="30%" stopColor="#FBBF24" />
+              <stop offset="70%" stopColor="#FEF08A" />
+              <stop offset="100%" stopColor="#FFFBEB" />
             </linearGradient>
 
-            {/* Inner layered petal gradient */}
-            <linearGradient id={`innerPetalGrad-${flower.id}`} x1="0%" y1="100%" x2="0%" y2="0%">
+            {/* Rose Petal Gradient */}
+            <linearGradient id={`roseGrad-${flower.id}`} x1="0%" y1="100%" x2="0%" y2="0%">
               <stop offset="0%" stopColor="#B45309" />
-              <stop offset="50%" stopColor="#F59E0B" />
+              <stop offset="40%" stopColor="#F59E0B" />
+              <stop offset="85%" stopColor="#FDE047" />
+              <stop offset="100%" stopColor="#FEF9C3" />
+            </linearGradient>
+
+            {/* Tulip Petal Gradient */}
+            <linearGradient id={`tulipGrad-${flower.id}`} x1="0%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="#B45309" />
+              <stop offset="25%" stopColor="#EA580C" />
+              <stop offset="60%" stopColor="#F59E0B" />
+              <stop offset="90%" stopColor="#FDE047" />
               <stop offset="100%" stopColor="#FEF08A" />
             </linearGradient>
 
-            {/* Core center disk gradient */}
+            {/* Sunflower Center Core Gradient */}
             <radialGradient id={`coreGrad-${flower.id}`}>
-              <stop offset="0%" stopColor="#78350F" />
-              <stop offset="65%" stopColor="#451A03" />
-              <stop offset="90%" stopColor="#92400E" />
-              <stop offset="100%" stopColor="#F59E0B" />
+              <stop offset="0%" stopColor={flower.id.includes('medianoche') ? '#261205' : '#5B210B'} />
+              <stop offset="60%" stopColor={flower.id.includes('medianoche') ? '#180B02' : '#3F1805'} />
+              <stop offset="85%" stopColor="#78350F" />
+              <stop offset="100%" stopColor="#D97706" />
             </radialGradient>
 
-            {/* Protective sepal green gradient */}
-            <linearGradient id={`sepalGrad-${flower.id}`} x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#65A30D" />
-              <stop offset="100%" stopColor="#365314" />
+            {/* Daisy Sunny Center Gradient */}
+            <radialGradient id={`daisyCore-${flower.id}`}>
+              <stop offset="0%" stopColor="#B45309" />
+              <stop offset="50%" stopColor="#D97706" />
+              <stop offset="85%" stopColor="#F59E0B" />
+              <stop offset="100%" stopColor="#FDE047" />
+            </radialGradient>
+
+            {/* Stem Gradient */}
+            <linearGradient id={`stemGrad-${flower.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#2E4A0C" />
+              <stop offset="50%" stopColor="#4D7C0F" />
+              <stop offset="100%" stopColor="#3F6212" />
             </linearGradient>
           </defs>
 
-          {/* BACK LAYER: Protective Green Sepals (visible when bud or partial bloom) */}
+          {/* 1. BOTANICAL STEM (Seamlessly connects right into the flower receptacle) */}
+          <g>
+            <path
+              d={
+                isBloomed
+                  ? 'M 0,14 Q 4,68 -2,130'
+                  : 'M 0,14 Q -3,68 0,130'
+              }
+              fill="none"
+              stroke={`url(#stemGrad-${flower.id})`}
+              strokeWidth={isSunflower ? 5.5 : 4.5}
+              strokeLinecap="round"
+              className="transition-all duration-1000 ease-out"
+            />
+
+            {/* Left Leaf */}
+            <path
+              d="M 1,52 C -14,44 -30,36 -34,48 C -26,62 -10,60 1,55 Z"
+              fill="#365314"
+              stroke="#4D7C0F"
+              strokeWidth="1"
+              style={{
+                transformBox: 'fill-box',
+                transformOrigin: '100% 50%',
+                transform: isBloomed ? 'scale(1.15) rotate(6deg)' : 'scale(0.85) rotate(-6deg)',
+                transition: 'transform 900ms ease-out',
+              }}
+            />
+
+            {/* Right Leaf */}
+            <path
+              d="M -1,82 C 14,75 32,68 36,80 C 28,94 10,91 -1,85 Z"
+              fill="#3F6212"
+              stroke="#65A30D"
+              strokeWidth="1"
+              style={{
+                transformBox: 'fill-box',
+                transformOrigin: '0% 50%',
+                transform: isBloomed ? 'scale(1.15) rotate(-6deg)' : 'scale(0.85) rotate(6deg)',
+                transition: 'transform 900ms ease-out',
+              }}
+            />
+
+            {/* Receptacle Cup (Calyx base anchoring the flower head to the stem) */}
+            <path
+              d="M -14,6 C -12,20 12,20 14,6 C 8,24 -8,24 -14,6 Z"
+              fill="#2E4A0C"
+              stroke="#365314"
+              strokeWidth="1"
+            />
+          </g>
+
+          {/* 2. PROTECTIVE GREEN SEPALS */}
           <g
-            className="transition-all duration-1000 ease-out origin-center"
+            className="transition-all duration-1000 ease-out"
             style={{
-              transform: isBloomed ? 'scale(0.85) rotate(15deg)' : 'scale(1.08) rotate(0deg)',
-              opacity: isBloomed ? 0.35 : 0.9,
+              transformOrigin: '0px 0px',
+              transformBox: 'view-box',
+              transform: isBloomed ? 'scale(0.88) rotate(15deg)' : 'scale(1.05) rotate(0deg)',
+              opacity: isBloomed ? 0.35 : 0.85,
             }}
           >
             {[0, 60, 120, 180, 240, 300].map((angle, idx) => (
               <path
-                key={`sepal-${idx}`}
-                d="M -6,0 C -12,-20 -8,-38 0,-50 C 8,-38 12,-20 6,0 Z"
-                fill={`url(#sepalGrad-${flower.id})`}
+                key={`sep-${idx}`}
+                d="M -6,0 C -12,-18 -8,-36 0,-48 C 8,-36 12,-18 6,0 Z"
+                fill="#365314"
                 transform={`rotate(${angle})`}
               />
             ))}
           </g>
 
-          {/* LAYER 1: Outer Petals (unfurl widely with organic tilt) */}
-          <g className="origin-center">
-            {Array.from({ length: outerPetalCount }).map((_, idx) => {
-              const baseAngle = (idx * 360) / outerPetalCount;
-              // Fluid staggered unfurling formula:
-              // Closed state: petals curled tightly towards center (scaleY small, angle compressed)
-              // Bloomed state: petals expanded, stretched outward, radiating gently
-              const scaleY = isBloomed ? 1.05 : 0.42;
-              const scaleX = isBloomed ? 1.0 : 0.65;
-              const rotation = baseAngle;
+          {/* 3. BOTANICAL PETALS (Species-specific & anchored perfectly at 0,0) */}
 
-              return (
+          {/* === A. SUNFLOWER (Girasol Imperial / Medianoche) === */}
+          {isSunflower && (
+            <>
+              {/* Outer Ray Petals */}
+              <g>
+                {Array.from({ length: sunflowerOuterCount }).map((_, idx) => {
+                  const angle = (idx * 360) / sunflowerOuterCount;
+                  const scaleY = isBloomed ? 1.05 : 0.44;
+                  const scaleX = isBloomed ? 1.0 : 0.62;
+
+                  return (
+                    <g key={`sun-outer-${idx}`} transform={`rotate(${angle})`}>
+                      <path
+                        d="M 0,0 C -13,-20 -15,-48 0,-68 C 15,-48 13,-20 0,0 Z"
+                        fill={`url(#petalGrad-${flower.id})`}
+                        style={{
+                          transformBox: 'fill-box',
+                          transformOrigin: '50% 100%',
+                          transform: `scale(${scaleX}, ${scaleY})`,
+                          transition: `transform 850ms cubic-bezier(0.16, 1, 0.3, 1) ${idx * 16}ms, filter 500ms ease`,
+                          filter: isBloomed ? 'drop-shadow(0 0 5px rgba(245, 158, 11, 0.45))' : 'none',
+                        }}
+                      />
+                    </g>
+                  );
+                })}
+              </g>
+
+              {/* Inner Staggered Petals */}
+              <g>
+                {Array.from({ length: sunflowerInnerCount }).map((_, idx) => {
+                  const angle = (idx * 360) / sunflowerInnerCount + 15;
+                  const scaleY = isBloomed ? 0.88 : 0.38;
+                  const scaleX = isBloomed ? 0.88 : 0.55;
+
+                  return (
+                    <g key={`sun-inner-${idx}`} transform={`rotate(${angle})`}>
+                      <path
+                        d="M 0,0 C -10,-16 -12,-38 0,-52 C 12,-38 10,-16 0,0 Z"
+                        fill={`url(#petalGrad-${flower.id})`}
+                        style={{
+                          transformBox: 'fill-box',
+                          transformOrigin: '50% 100%',
+                          transform: `scale(${scaleX}, ${scaleY})`,
+                          transition: `transform 850ms cubic-bezier(0.16, 1, 0.3, 1) ${100 + idx * 16}ms`,
+                        }}
+                      />
+                    </g>
+                  );
+                })}
+              </g>
+            </>
+          )}
+
+          {/* === B. DAISY (Margarita Silvestre) === */}
+          {isDaisy && (
+            <g>
+              {Array.from({ length: daisyPetalCount }).map((_, idx) => {
+                const angle = (idx * 360) / daisyPetalCount;
+                const scaleY = isBloomed ? 1.05 : 0.42;
+                const scaleX = isBloomed ? 1.0 : 0.6;
+
+                return (
+                  <g key={`daisy-${idx}`} transform={`rotate(${angle})`}>
+                    <path
+                      d="M 0,0 C -6,-18 -7,-44 0,-62 C 7,-44 6,-18 0,0 Z"
+                      fill={`url(#daisyGrad-${flower.id})`}
+                      style={{
+                        transformBox: 'fill-box',
+                        transformOrigin: '50% 100%',
+                        transform: `scale(${scaleX}, ${scaleY})`,
+                        transition: `transform 800ms cubic-bezier(0.16, 1, 0.3, 1) ${idx * 15}ms, filter 500ms ease`,
+                        filter: isBloomed ? 'drop-shadow(0 0 4px rgba(253, 224, 71, 0.5))' : 'none',
+                      }}
+                    />
+                  </g>
+                );
+              })}
+            </g>
+          )}
+
+          {/* === C. ROSE (Rosa Dorada) === */}
+          {isRose && (
+            <g>
+              {/* Outer Whorl: 6 broad cupped petals */}
+              {[0, 60, 120, 180, 240, 300].map((angle, idx) => {
+                const scaleY = isBloomed ? 1.05 : 0.45;
+                const scaleX = isBloomed ? 1.05 : 0.65;
+                return (
+                  <g key={`rose-out-${idx}`} transform={`rotate(${angle})`}>
+                    <path
+                      d="M 0,0 C -18,-14 -22,-36 -8,-50 C 0,-55 8,-55 16,-46 C 22,-36 18,-14 0,0 Z"
+                      fill={`url(#roseGrad-${flower.id})`}
+                      style={{
+                        transformBox: 'fill-box',
+                        transformOrigin: '50% 100%',
+                        transform: `scale(${scaleX}, ${scaleY})`,
+                        transition: `transform 850ms cubic-bezier(0.16, 1, 0.3, 1) ${idx * 20}ms`,
+                      }}
+                    />
+                  </g>
+                );
+              })}
+
+              {/* Mid Whorl: 6 overlapping petals */}
+              {[30, 90, 150, 210, 270, 330].map((angle, idx) => {
+                const scaleY = isBloomed ? 0.9 : 0.4;
+                const scaleX = isBloomed ? 0.9 : 0.58;
+                return (
+                  <g key={`rose-mid-${idx}`} transform={`rotate(${angle})`}>
+                    <path
+                      d="M 0,0 C -14,-10 -18,-28 -6,-38 C 0,-42 6,-42 12,-34 C 16,-26 14,-10 0,0 Z"
+                      fill={`url(#roseGrad-${flower.id})`}
+                      style={{
+                        transformBox: 'fill-box',
+                        transformOrigin: '50% 100%',
+                        transform: `scale(${scaleX}, ${scaleY})`,
+                        transition: `transform 850ms cubic-bezier(0.16, 1, 0.3, 1) ${100 + idx * 20}ms`,
+                      }}
+                    />
+                  </g>
+                );
+              })}
+            </g>
+          )}
+
+          {/* === D. TULIP (Tulipán del Sol) === */}
+          {isTulip && (
+            <g>
+              {/* Back Petals (spread wider when bloomed) */}
+              {[-38, 38].map((angle, idx) => {
+                const scaleY = isBloomed ? 1.05 : 0.55;
+                const tiltAngle = isBloomed ? angle * 1.25 : angle * 0.45;
+                return (
+                  <g key={`tulip-back-${idx}`} transform={`rotate(${tiltAngle})`}>
+                    <path
+                      d="M 0,0 C -16,-24 -18,-54 0,-68 C 18,-54 16,-24 0,0 Z"
+                      fill={`url(#tulipGrad-${flower.id})`}
+                      style={{
+                        transformBox: 'fill-box',
+                        transformOrigin: '50% 100%',
+                        transform: `scale(${isBloomed ? 1 : 0.8}, ${scaleY})`,
+                        transition: 'transform 850ms cubic-bezier(0.16, 1, 0.3, 1)',
+                      }}
+                    />
+                  </g>
+                );
+              })}
+
+              {/* Side Tepals */}
+              {[-18, 18].map((angle, idx) => {
+                const tiltAngle = isBloomed ? angle * 1.3 : angle * 0.5;
+                return (
+                  <g key={`tulip-side-${idx}`} transform={`rotate(${tiltAngle})`}>
+                    <path
+                      d="M 0,0 C -14,-22 -16,-52 0,-66 C 16,-52 14,-22 0,0 Z"
+                      fill={`url(#tulipGrad-${flower.id})`}
+                      style={{
+                        transformBox: 'fill-box',
+                        transformOrigin: '50% 100%',
+                        transform: `scale(${isBloomed ? 1.02 : 0.75}, ${isBloomed ? 1.02 : 0.58})`,
+                        transition: 'transform 850ms cubic-bezier(0.16, 1, 0.3, 1)',
+                      }}
+                    />
+                  </g>
+                );
+              })}
+
+              {/* Front Center Petal */}
+              <g>
                 <path
-                  key={`outer-${idx}`}
-                  d="M 0,0 C -14,-22 -16,-52 0,-70 C 16,-52 14,-22 0,0 Z"
-                  fill={`url(#petalGrad-${flower.id})`}
-                  className="transition-all duration-1000 ease-out origin-center"
+                  d="M 0,0 C -12,-20 -14,-50 0,-64 C 14,-50 12,-20 0,0 Z"
+                  fill={`url(#tulipGrad-${flower.id})`}
                   style={{
-                    transform: `rotate(${rotation}deg) scale(${scaleX}, ${scaleY})`,
-                    transitionDelay: `${idx * 18}ms`,
-                    filter: isBloomed ? 'drop-shadow(0 0 4px rgba(251, 191, 36, 0.4))' : 'none',
+                    transformBox: 'fill-box',
+                    transformOrigin: '50% 100%',
+                    transform: `scale(${isBloomed ? 1 : 0.8}, ${isBloomed ? 1 : 0.65})`,
+                    transition: 'transform 850ms cubic-bezier(0.16, 1, 0.3, 1)',
                   }}
                 />
-              );
-            })}
-          </g>
+              </g>
+            </g>
+          )}
 
-          {/* LAYER 2: Middle Concentric Petals */}
-          <g className="origin-center">
-            {Array.from({ length: innerPetalCount }).map((_, idx) => {
-              const baseAngle = (idx * 360) / innerPetalCount + 15;
-              const scaleY = isBloomed ? 0.88 : 0.38;
-              const scaleX = isBloomed ? 0.85 : 0.55;
-
-              return (
-                <path
-                  key={`mid-${idx}`}
-                  d="M 0,0 C -11,-18 -13,-40 0,-54 C 13,-40 11,-18 0,0 Z"
-                  fill={`url(#innerPetalGrad-${flower.id})`}
-                  className="transition-all duration-1000 ease-out origin-center"
-                  style={{
-                    transform: `rotate(${baseAngle}deg) scale(${scaleX}, ${scaleY})`,
-                    transitionDelay: `${120 + idx * 22}ms`,
-                  }}
-                />
-              );
-            })}
-          </g>
-
-          {/* LAYER 3: Intricate Sunflower Center / Floral Corona */}
+          {/* 4. FLOWER CORE / FLORET (Species Specific & centered at 0,0) */}
           <g
-            className="transition-all duration-800 ease-out origin-center"
+            className="transition-all duration-800 ease-out"
             style={{
-              transform: isBloomed ? 'scale(1.1)' : 'scale(0.9)',
+              transformOrigin: '0px 0px',
+              transformBox: 'view-box',
+              transform: isBloomed ? 'scale(1.08)' : 'scale(0.96)',
             }}
           >
-            {/* Core Disk Floret */}
-            <circle
-              cx="0"
-              cy="0"
-              r={flower.type === 'sunflower' ? 24 : 17}
-              fill={`url(#coreGrad-${flower.id})`}
-              className="transition-transform duration-700"
-            />
-
-            {/* Glowing Golden Stamen Ring */}
-            <circle
-              cx="0"
-              cy="0"
-              r={flower.type === 'sunflower' ? 21 : 14}
-              fill="none"
-              stroke="#FDE047"
-              strokeWidth="2"
-              strokeDasharray="2,3"
-              className={`transition-all duration-1000 ${isBloomed ? 'opacity-90' : 'opacity-40'}`}
-            />
-
-            {/* Inner Spiral Seeds */}
-            {Array.from({ length: 12 }).map((_, sIdx) => {
-              const sAngle = (sIdx * 30 * Math.PI) / 180;
-              const r = flower.type === 'sunflower' ? 10 : 7;
-              return (
+            {/* Sunflower Center */}
+            {isSunflower && (
+              <>
+                <circle cx="0" cy="0" r="21" fill={`url(#coreGrad-${flower.id})`} />
                 <circle
-                  key={`seed-${sIdx}`}
-                  cx={Math.cos(sAngle) * r}
-                  cy={Math.sin(sAngle) * r}
-                  r="1.8"
-                  fill="#F59E0B"
-                  opacity={isBloomed ? 0.9 : 0.5}
+                  cx="0"
+                  cy="0"
+                  r="18"
+                  fill="none"
+                  stroke="#FDE047"
+                  strokeWidth="2"
+                  strokeDasharray="2,3"
+                  className={`transition-opacity duration-1000 ${isBloomed ? 'opacity-90' : 'opacity-40'}`}
                 />
-              );
-            })}
+                {Array.from({ length: 12 }).map((_, sIdx) => {
+                  const sAngle = (sIdx * 30 * Math.PI) / 180;
+                  return (
+                    <circle
+                      key={`seed-${sIdx}`}
+                      cx={Math.cos(sAngle) * 9}
+                      cy={Math.sin(sAngle) * 9}
+                      r="1.6"
+                      fill="#F59E0B"
+                      opacity={isBloomed ? 0.95 : 0.5}
+                    />
+                  );
+                })}
+              </>
+            )}
+
+            {/* Daisy Button Center */}
+            {isDaisy && (
+              <>
+                <circle cx="0" cy="0" r="15" fill={`url(#daisyCore-${flower.id})`} />
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="12"
+                  fill="none"
+                  stroke="#FEF08A"
+                  strokeWidth="1.5"
+                  strokeDasharray="1.5,2.5"
+                  opacity={isBloomed ? 0.95 : 0.5}
+                />
+              </>
+            )}
+
+            {/* Rose Spiral Bud Center */}
+            {isRose && (
+              <g>
+                <circle cx="0" cy="0" r="14" fill="#92400E" />
+                <path
+                  d="M -6,-2 C -3,-8 4,-8 7,-3 C 9,3 3,7 -2,6 C -6,5 -7,0 -4,-2"
+                  fill="none"
+                  stroke="#FDE047"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </g>
+            )}
+
+            {/* Tulip Pistil Center */}
+            {isTulip && (
+              <g>
+                <circle cx="0" cy="0" r="7" fill="#451A03" />
+                <circle cx="0" cy="0" r="3" fill="#FDE047" />
+              </g>
+            )}
           </g>
         </svg>
 
-        {/* Small magic status badge on hover */}
+        {/* Small floating badge */}
         <div
-          className={`absolute -bottom-2 px-2 py-0.5 rounded-full text-[10px] font-sans font-medium tracking-wide uppercase transition-all duration-500 flex items-center gap-1 ${
+          className={`absolute bottom-1 px-2.5 py-0.5 rounded-full text-[10px] font-sans font-medium tracking-wide uppercase transition-all duration-500 flex items-center gap-1 ${
             isBloomed
               ? 'bg-amber-400 text-amber-950 shadow-md shadow-amber-500/30 opacity-100 translate-y-0 scale-100'
-              : 'bg-amber-950/70 text-amber-300/80 border border-amber-500/20 opacity-0 translate-y-2 scale-90'
+              : 'bg-amber-950/70 text-amber-300/80 border border-amber-500/20 opacity-0 translate-y-2 scale-90 pointer-events-none'
           }`}
         >
           <Sparkles className="w-2.5 h-2.5" />
@@ -242,49 +500,8 @@ export const InteractiveFlower: React.FC<InteractiveFlowerProps> = ({
         </div>
       </div>
 
-      {/* Flower Botanical Stem with swaying leaves */}
-      <div className="relative w-12 h-24 flex justify-center -mt-2">
-        {/* Curving green stem */}
-        <svg viewBox="0 0 40 100" className="w-10 h-full overflow-visible">
-          <path
-            d={
-              isBloomed
-                ? 'M 20,0 Q 22,50 20,100'
-                : 'M 20,0 Q 15,45 20,100'
-            }
-            fill="none"
-            stroke="#4D7C0F"
-            strokeWidth="4"
-            strokeLinecap="round"
-            className="transition-all duration-1000 ease-out"
-          />
-
-          {/* Left Leaf (unfurls when flower blooms) */}
-          <path
-            d="M 20,38 C 5,30 -5,45 8,56 C 16,50 19,42 20,38 Z"
-            fill="#3F6212"
-            className="transition-all duration-1000 origin-[20px_38px]"
-            style={{
-              transform: isBloomed ? 'scale(1.15) rotate(5deg)' : 'scale(0.7) rotate(-15deg)',
-              opacity: isBloomed ? 0.95 : 0.65,
-            }}
-          />
-
-          {/* Right Leaf */}
-          <path
-            d="M 20,58 C 35,50 45,65 32,76 C 24,70 21,62 20,58 Z"
-            fill="#4D7C0F"
-            className="transition-all duration-1000 origin-[20px_58px]"
-            style={{
-              transform: isBloomed ? 'scale(1.15) rotate(-5deg)' : 'scale(0.7) rotate(15deg)',
-              opacity: isBloomed ? 0.95 : 0.65,
-            }}
-          />
-        </svg>
-      </div>
-
-      {/* Flower Title & Romantic Meaning Card */}
-      <div className="mt-1 text-center max-w-[160px]">
+      {/* Flower Title & Meaning Card */}
+      <div className="mt-1 text-center max-w-[170px]">
         <h4 className="font-serif text-sm font-semibold text-amber-100 tracking-wide group-hover:text-amber-300 transition-colors">
           {flower.name}
         </h4>
